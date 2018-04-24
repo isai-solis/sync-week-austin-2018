@@ -14,13 +14,21 @@ class HumanScannerTest(unittest.TestCase):
     def test_initial_state(self):
         self.assertNotEqual(self.scanner.hog, None)
     def test_single_person(self):
-        test_image_path = os.path.join(os.path.dirname(__file__), 'data', 'person_beach.jpg')
+        test_image_path = os.path.join(os.path.dirname(__file__), 'data', 'person_view.jpg')
         test_image = cv2.imread(test_image_path)
         result = self.scanner.scan(test_image)
-        self.assertEqual(len(result), 9)
+        for entry in result:
+            box = entry['box']
+            pt1 = (box[0], box[1])
+            pt2 = (pt1[0]+box[2], pt1[1]+box[3])
+            cv2.rectangle(test_image, pt1, pt2, (0,255,0), 2)
+            text = "Score : {}".format(entry['score'])
+            cv2.putText(test_image, text, pt1, cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
+        cv2.imwrite('/tmp/human_scanner.test.jpg', test_image)
+        self.assertEqual(len(result), 1)
         self.assertEqual(result[0]['label'], 'person')
-        self.assertAlmostEqual(result[0]['score'], 1.65, delta=1)
-        self.assertEqual(result[0]['box'], (3939, 1820,  107,  214))
+        self.assertAlmostEqual(result[0]['score'], 0.89, delta=1)
+        self.assertEqual(result[0]['box'], (2164, 436, 1320, 2639))
 
 if __name__ == '__main__':
     unittest.main()

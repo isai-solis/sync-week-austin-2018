@@ -13,9 +13,12 @@ class HumanScanner(object):
         (rects, weights) = self.hog.detectMultiScale(image, winStride=(4, 4), padding=(8, 8), scale=1.05)
         result = list()
         for entry in zip(rects, weights):
+            score = entry[1][0]
+            if score < 0.60:
+                continue
             result.append({
                 'label': 'person',
-                'score': entry[1][0],
+                'score': score,
                 'box': tuple(entry[0])
             })
         return sorted(result, key=lambda x:x['score'], reverse=True)
