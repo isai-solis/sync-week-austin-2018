@@ -13,6 +13,6 @@ class HumanScanner(object):
         (rects, weights) = self.hog.detectMultiScale(image, winStride=(4, 4), padding=(8, 8), scale=1.05)
         result = dict()
         for entry in zip(rects, weights):
-            result['box'] = entry[0]
-            result['score'] = entry[1]
+            result['box'] = entry[0][0]
+            result['score'] = entry[1][0]
         return result
