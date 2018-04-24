@@ -12,6 +12,10 @@ class HumanScannerTest(unittest.TestCase):
     def setUp(self):
         self.scanner = leapvision.scanner.HumanScanner()
     def test_initial_state(self):
+        self.assertEqual(self.scanner.scoreThreshold, 0.6)
+        self.assertEqual(self.scanner.winStride, (8, 8))
+        self.assertEqual(self.scanner.padding, (8, 8))
+        self.assertEqual(self.scanner.scale, 1.05)
         self.assertNotEqual(self.scanner.hog, None)
     def test_single_person(self):
         test_image_path = os.path.join(os.path.dirname(__file__), 'data', 'person_view.jpg')
@@ -28,7 +32,7 @@ class HumanScannerTest(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]['label'], 'person')
         self.assertAlmostEqual(result[0]['score'], 0.89, delta=1)
-        self.assertEqual(result[0]['box'], (2164, 436, 1320, 2639))
+        self.assertEqual(result[0]['box'], (2138, 437, 1319, 2638))
 
 if __name__ == '__main__':
     unittest.main()
