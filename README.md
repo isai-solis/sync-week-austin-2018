@@ -7,7 +7,20 @@ The goal of this project is to build a pair of tools that will allow one to:
 1. Identify people in a given video stream.
 2. Blur-out the faces present in a give video stream.
 
-# Darknet/YOLO
+# Build and Test
+Once all the dependencies are installed, you can test the code by typing:
+
+```
+python -m unittest discover
+```
+
+or a single test:
+
+```
+python -m unittest test.test_pixelator
+```
+
+# darknet/YOLO
 For consistency, you should download YOLO to the base of this project, e.g.
 
 ```

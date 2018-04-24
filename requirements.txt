@@ -1,0 +1,5 @@
+jupyter
+opencv-contrib-python
+opencv-python
+rtree
+
