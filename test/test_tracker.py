@@ -94,5 +94,6 @@ class ObjectTrackerTest(unittest.TestCase):
                 key = cv2.waitKey(1)
             self.tracker.clear()
 
+
 if __name__ == '__main__':
     unittest.main()

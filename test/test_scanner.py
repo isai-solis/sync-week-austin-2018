@@ -39,6 +39,46 @@ class HumanScannerTest(unittest.TestCase):
         self.assertAlmostEqual(result[0]['score'], 0.89, delta=1)
         self.assertEqual(result[0]['box'], (2138, 437, 1319, 2638))
 
-
+    def test_demo(self):
+        enabled = bool(os.environ.get('SCANNER_DEMO_ENABLED'))
+        if not enabled:
+            return
+        self.scanner = leapvision.scanner.HumanScanner(scoreThreshold=0.75)
+        video_path = os.path.join(
+            os.path.dirname(__file__),
+            'data',
+            'people_walking.mp4'
+        )
+        key = 0
+        while key & 0xff != ord('q'):
+            camera = cv2.VideoCapture(video_path)
+            cv2.namedWindow('camera')
+            cv2.moveWindow('camera', 0, 0)
+            while camera.isOpened():
+                ok, frame = camera.read()
+                if not ok:
+                    break
+                tick_count = cv2.getTickCount()
+                result = self.scanner.scan(frame)
+                fps = cv2.getTickFrequency() / (cv2.getTickCount() - tick_count)
+                cv2.putText(
+                    frame,
+                    "fps: {}".format(int(fps)),
+                    (12, 24),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.75,
+                    (0, 255, 0),
+                    2
+                )
+                for entry in result:
+                    box = entry['box']
+                    pt1 = (box[0], box[1])
+                    pt2 = (pt1[0]+box[2], pt1[1]+box[3])
+                    cv2.rectangle(frame, pt1, pt2, (0, 255, 0), 2)
+                    text = "Score : {}".format(entry['score'])
+                    cv2.putText(frame, text, pt1,
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50, 170, 50), 2)
+                cv2.imshow('camera', frame)
+                key = cv2.waitKey(1)
 if __name__ == '__main__':
     unittest.main()
