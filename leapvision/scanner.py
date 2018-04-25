@@ -1,5 +1,7 @@
 import cv2
+import numpy as np
 
+import foundation
 
 class HumanScanner(object):
     '''
@@ -31,4 +33,5 @@ class HumanScanner(object):
                 'score': score[0],
                 'box': tuple(rect)
             })
+        result = foundation.non_max_suppression(result)
         return sorted(result, key=lambda x: x['score'], reverse=True)
