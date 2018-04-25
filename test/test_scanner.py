@@ -18,7 +18,7 @@ class HumanScannerTest(unittest.TestCase):
         self.assertEqual(self.scanner.winStride, (8, 8))
         self.assertEqual(self.scanner.padding, (8, 8))
         self.assertEqual(self.scanner.scale, 1.05)
-        self.assertNotEqual(self.scanner.hog, None)
+        self.assertIsNotNone(self.scanner.hog)
 
     def test_single_person(self):
         test_image_path = os.path.join(
