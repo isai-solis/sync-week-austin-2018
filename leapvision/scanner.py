@@ -3,6 +3,7 @@ import numpy as np
 
 import foundation
 
+
 class HumanScanner(object):
     '''
     Scanner implementation that returns a list of bounding boxes for any
