@@ -98,13 +98,7 @@ class FaceScannerTest(unittest.TestCase):
         self.assertTrue(ok)
         faces = self.scanner.scan(frame)
         self.assertEqual(len(faces), 7)
-        self.assertEqual(faces[0]['box'], (610, 34, 99, 99))
-        self.assertEqual(faces[1]['box'], (237, 535, 63, 63))
-        self.assertEqual(faces[2]['box'], (526, 498, 161, 161))
-        self.assertEqual(faces[3]['box'], (925, 536, 140, 140))
-        self.assertEqual(faces[4]['box'], (369, 608, 66, 66))
-        self.assertEqual(faces[5]['box'], (700, 579, 119, 119))
-        self.assertEqual(faces[6]['box'], (387, 714, 180, 180))
+        self.assertEqual(faces[0]['box'], (157, 357, 44, 44))
         
 
     def test_demo(self):

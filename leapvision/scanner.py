@@ -58,7 +58,13 @@ class FaceScanner(object):
             'data',
             'haarcascade_frontalface_default.xml'
         )
-        self.classifier = cv2.CascadeClassifier(weights_path)
+        self.frontalface = cv2.CascadeClassifier(weights_path)
+        weights_path = os.path.join(
+            cv2.__path__[0],
+            'data',
+            'haarcascade_profileface.xml'
+        )
+        self.profileface = cv2.CascadeClassifier(weights_path)
 
     def scan(
         self,
@@ -68,18 +74,30 @@ class FaceScanner(object):
         minSize=(30, 30),
         flags=cv2.CASCADE_SCALE_IMAGE
     ):
-        rects = self.classifier.detectMultiScale(
+        result = list()
+        for rect in self.frontalface.detectMultiScale(
             image,
             scaleFactor=scaleFactor,
             minNeighbors=minNeighbors,
             minSize=minSize,
             flags=flags,
-        )
-        return map(
-            lambda rect: {
+        ):
+            result.append({
                 'label': 'face',
                 'score': 0.99,
                 'box': tuple(rect)
-            },
-            rects
-        )
+            })
+        
+        for rect in self.profileface.detectMultiScale(
+            image,
+            scaleFactor=scaleFactor,
+            minNeighbors=minNeighbors,
+            minSize=minSize,
+            flags=flags,
+        ):
+            result.append({
+                'label': 'face',
+                'score': 0.99,
+                'box': tuple(rect)
+            })
+        return foundation.non_max_suppression(result)
