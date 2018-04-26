@@ -9,7 +9,7 @@ if __name__ == '__main__':
 import leapvision.tracker
 
 
-class ObjectTrackerTest(unittest.TestCase):
+class SingleObjectTrackerTest(unittest.TestCase):
     def setUp(self):
         self.video_path = os.path.join(
             os.path.dirname(__file__),
@@ -19,7 +19,7 @@ class ObjectTrackerTest(unittest.TestCase):
         self.camera = cv2.VideoCapture(self.video_path)
         ok, frame = self.camera.read()
         box = (421, 417, 100, 160)
-        self.tracker = leapvision.tracker.ObjectTracker(
+        self.tracker = leapvision.tracker.SingleObjectTracker(
             frame,
             box
         )
@@ -59,7 +59,7 @@ class ObjectTrackerTest(unittest.TestCase):
             camera = cv2.VideoCapture(video_path)
             ok, frame = camera.read()
             box = (421, 417, 100, 160)
-            self.tracker = leapvision.tracker.ObjectTracker(
+            self.tracker = leapvision.tracker.SingleObjectTracker(
                 frame,
                 box
             )
