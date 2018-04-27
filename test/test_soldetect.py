@@ -3,15 +3,19 @@ import os
 import sys
 import unittest
 
-import soldetect
+if __name__ == '__main__':
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+import leapvision.soldetect
 
 class PersonDetectorTest(unittest.TestCase):
     def setUp(self):
-        self.soldetect = soldetect.PersonDetector()
+        self.soldetect = leapvision.soldetect.PersonDetector()
+
     def test_initial_state(self):
         self.assertNotEqual(self.soldetect.hog, None)
+
     def test_single_person(self):
-        self.soldetect = soldetect.PersonDetector()
         test_image_path = os.path.join(os.path.dirname(__file__), 'data', 'zeyn-afuang-258471-unsplash.jpg')
         test_image = cv2.imread(test_image_path)
         result = self.soldetect.scan(test_image)
