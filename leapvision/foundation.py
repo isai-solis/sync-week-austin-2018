@@ -49,6 +49,11 @@ def box_intersection_over_union(a, b):
 
 
 def non_max_suppression(objects, score_key='score', box_key='box', iou_threshold=0.5, should_convert_box=True):
+    '''
+    Filters the given list of objects using non-max-suppression. If the box
+    value for each object is NOT in the form (x1, y1, x2, y2) but rather
+    (x, y, width, height), then should_convert_box just be set to True.
+    '''
     sorted_objects = sorted(objects, key=lambda x: x[score_key], reverse=True)
 
     database = rtree.index.Index()
