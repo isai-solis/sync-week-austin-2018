@@ -2,6 +2,7 @@ import cv2
 import os
 import sys
 import unittest
+import numpy as np
 
 if __name__ == '__main__':
     sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -119,12 +120,32 @@ class FaceScannerTest(unittest.TestCase):
                 break
             tick_count = cv2.getTickCount()
             faces = self.scanner.scan(frame)
+            foreground_mask = np.zeros(frame.shape[:2], np.uint8)
             for entry in faces:
                 box = entry['box']
                 pt1 = (box[0], box[1])
                 pt2 = (pt1[0]+box[2], pt1[1]+box[3])
-                cv2.rectangle(frame, pt1, pt2, (0, 255, 0), 2)
-            cv2.imshow('camera', frame)
+                cv2.rectangle(foreground_mask, pt1, pt2, (255), cv2.FILLED)
+
+            # TODO: Optimize all this - it's likely making things slow.
+            pixelated = cv2.resize(frame, (0,0), fx=0.05, fy=0.05, interpolation=cv2.INTER_NEAREST)
+            pixelated = cv2.resize(pixelated, (0,0), fx=20.0, fy=20.0, interpolation=cv2.INTER_NEAREST)
+            foreground = cv2.bitwise_and(pixelated, pixelated, mask=foreground_mask)
+            background_mask = cv2.bitwise_not(foreground_mask)
+            background = cv2.bitwise_and(frame, frame, mask=background_mask)
+            masked_frame = cv2.add(background, foreground)
+
+            fps = cv2.getTickFrequency() / (cv2.getTickCount() - tick_count)
+            cv2.putText(
+                masked_frame,
+                "fps: {}".format(int(fps)),
+                (12, 24),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.75,
+                (0, 255, 0),
+                2
+            )
+            cv2.imshow('camera', masked_frame)
             key = cv2.waitKey(1)
 
 
